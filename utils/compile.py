@@ -31,8 +31,4 @@ print "Compiling base template:"
 print "- %s -> %s" % (tmpl_in, tmpl_out)
 json.dump(tmpl, open(tmpl_out, 'w'), indent=2)
 # open(tmpl_out, "w").write(res)
-if res:
-    print "OK"
-else:
-    print "Doh!"
-    print res
+print "OK"

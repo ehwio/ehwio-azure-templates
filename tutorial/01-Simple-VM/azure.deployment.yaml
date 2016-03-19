@@ -1,142 +1,18 @@
 $schema: "$schema: http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#"
 contentVersion: "1.0.0.0"
-parameters:
-  newStorageAccountName:
-    type: string
-    metadata:
-      description: Admin User Name
-  location:
-    type: string
-  adminUserName:
-    type: string
-  adminPassword:
-    type: string
-  machineName:
-    type: string
-  imagePublisher:
-    type: string
-  imageOffer:
-    type: string
-  imageSKU:
-    type: string
-  vmSize:
-    type: string
-  publicIPAddressName:
-    type: string
-  sshPublicKeys:
-    type: array
+parameters: {}
 variables:
   location: "[resourceGroup().location]"
   apiVersion: "2015-06-15"
-
-  adminUserName: "[parameters('adminUserName')]"
-  adminPassword: "[parameters('adminPassword')]"
-  sshPublicKeys: "[parameters('sshPublicKeys')]"
-  # storage stuff
-  vmStorageAccountContainerName: 'testvms'
+  # adminUserName: "[parameters('adminUserName')]"
+  # adminPassword: "[parameters('adminPassword')]"
+  newStorageAccountName: "[concat('storage', uniqueString(resourceGroup().id))]"
   storageAccountType: Standard_LRS
-  newStorageAccountName: "[parameters('newStorageAccountName')]"
-
-  # network stuff
-  virtualNetworkName: "test-vnet"
-  addressPrefix: "10.0.0.0/16"
-  subnetName: "subnet-management"
-  subnetPrefix: "10.0.0.0/24"
-  vnetID: "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]"
-  subnetRef: "[concat(variables('vnetID'), '/subnets/', variables('subnetName'))]"
-  nicName: "testNIC"
-  publicIPAddressType: Dynamic
-  publicIPAddressName: "[parameters('publicIPAddressName')]"
-  # VM stuff
-  machineName: "[parameters('machineName')]"
-  vmSize: "[parameters('vmSize')]"
-  OSDiskName: osdisk-ubuntu
-
-  # OS stuff
-  imagePublisher: "[parameters('imagePublisher')]"
-  imageOffer: "[parameters('imageOffer')]"
-  imageSKU: "[parameters('imageSKU')]"
-
 resources:
-  # set up the storage account
-  - type: "Microsoft.Storage/storageAccounts"
-    name: "[parameters('newStorageAccountName')]"
-    apiVersion: "[variables('apiVersion')]"
-    location: "[parameters('location')]"
-    properties:
-      accountType: "[variables('storageAccountType')]"
-  # ceate a public IP address
-  - type: "Microsoft.Network/publicIPAddresses"
-    name: "[variables('publicIPAddressName')]"
-    apiVersion: "[variables('apiVersion')]"
-    location: "[variables('location')]"
-    properties:
-      publicIPAllocationMethod: "[variables('publicIPAddressType')]"
-      dnsSettings:
-        domainNameLabel: "[toLower(concat(resourceGroup().name, '-','public-ip'))]"
-  # now, here's a Network
-  - type: "Microsoft.Network/virtualNetworks"
-    name: "[variables('virtualNetworkName')]"
-    apiVersion: "[variables('apiVersion')]"
-    location: "[variables('location')]"
-    properties:
-      addressSpace:
-        addressPrefixes:
-          - "[variables('addressPrefix')]"
-      subnets:
-        - name: "[variables('subnetName')]"
-          properties:
-            addressPrefix: "[variables('subnetPrefix')]"
-  # let's have a NIC with that Network
-  - type: "Microsoft.Network/networkInterfaces"
-    name: "[variables('nicName')]"
-    apiVersion: "[variables('apiVersion')]"
-    location: "[variables('location')]"
-    # this needs to wait on the VNet to come up
-    dependsOn:
-      - "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]"
-      - "[concat('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'))]"
-    properties:
-      ipConfigurations:
-        - name: ipconfig1
-          properties:
-            privateIPAllocationMethod: Dynamic
-            subnet:
-              id: "[variables('subnetRef')]"
-            publicIPAddress:
-              id: "[resourceId('Microsoft.Network/publicIPAddresses',variables('publicIPAddressName'))]"
-  # and finally, let's add a machine...
-  - type: "Microsoft.Compute/virtualMachines"
-    name: "[variables('machineName')]"
-    location: "[variables('location')]"
-    apiVersion: "[variables('apiVersion')]"
-    # need to wait for storage and NIC to be available
-    dependsOn:
-      - "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
-      - "[concat('Microsoft.Storage/storageAccounts/', variables('newStorageAccountName'))]"
-    properties:
-      hardwareProfile:
-        vmSize: "[variables('vmSize')]"
-      osProfile:
-        computerName: "[variables('machineName')]"
-        adminUsername: "[variables('adminUsername')]"
-        adminPassword: "[variables('adminPassword')]"
-        linuxConfiguration:
-          ssh:
-            publicKeys: "[parameters('sshPublicKeys')]"
-
-      storageProfile:
-        imageReference:
-          publisher: "[variables('imagePublisher')]"
-          offer: "[variables('imageOffer')]"
-          sku: "[variables('imageSKU')]"
-          version: latest
-        osDisk:
-          name: osdisk
-          vhd:
-            uri: "[concat('http://',parameters('newStorageAccountName'), '.blob.core.windows.net/',variables('vmStorageAccountContainerName'), '/', variables('OSDiskName'),'.vhd')]"
-          caching: ReadWrite
-          createOption: FromImage
-      networkProfile:
-        networkInterfaces:
-          - id: "[resourceId('Microsoft.Network/networkInterfaces', variables('nicName'))]"
+    - type: "Microsoft.Storage/storageAccounts"
+      name: "[variables('newStorageAccountName')]"
+      apiVersion: "[variables('apiVersion')]"
+      location: "[variables('location')]"
+      properties:
+        accountType: "[variables('storageAccountType')]"
+outputs: {}
