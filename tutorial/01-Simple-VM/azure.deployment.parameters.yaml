@@ -1,0 +1,29 @@
+$schema: "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#"
+contentVersion: "1.0.0.0"
+parameters:
+  location:
+    value: westeurope
+  adminUserName:
+    value: demouser
+  adminPassword:
+    value: Arpanet1
+  newStorageAccountName:
+    value: tests02
+  machineName:
+    value: test-vm-01
+  vmSize:
+    value: Standard_A0
+  imagePublisher:
+    value: Canonical
+  imageOffer:
+    value: UbuntuServer
+  imageSKU:
+    value: "14.04.4-LTS"
+  publicIPAddressName:
+    value: "deploy-test-ehw-io"
+  sshPublicKeys:
+    value:
+      - keyData: "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAp8W4vSF1wr2JvU6rSr9nVclgcNCHYx+TS9CFa9qjFshPruLcGFbfQiT102Q/WeBhGNUHLQGmToNkOGyqJnJdjdQoNB7XeyYWIyxXBbPa9Zjj4+lgGUXhHsEiYhJtfqMZQvUuoKBgRFGmohJE+kpm9e6+pzpeWepBhnAIWq8sIQIoeoEIa8yl4UCmgxggTqZ9POLl1S4J5x9AN4cZgzZGtWNEiZnw+Ku04ASGqdXA9B869ilxCbhk7QmsZ6IUNr2bBd7Pd03e8zJgPRu3731feJmNgagNl42zxNEkp7L2pDquT2B0R5hKI8CYE1ogVq/tOFFHRms148FrqWOV93ufcw=="
+        path: "/home/demouser/.ssh/authorized_keys"
+      - keyData: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCuIi+Gr3ZrxQhyHx0bB1IpqZQ8Z0MgiCS1rVcilWA3LI01iPD5XIxwktla/hAsBA2kGEqaQb0Vp4OTXZ/UJnrfLag0Gay7DT6YQ8FSnbRd7WB09hS6R2Nlr+VgzOsaqrfrU1G6JIwCFiaIDv5aZtoBP5LaGDttV+kgELUs84NVbR1nfNmfyJpfcpCikHJ3lV1dQYr+4+oiFZIWNJAnsOQwiQfQbelJfVbzNJYL5itD4S+p4/bgsKqA9iDo5RUaLBU0uQvUwVngv7RJWSbmsggMKW25wwG7hcK73UWRXP3NcE8Z16tcLPEbRFA5w2OUCf+cB0z6JDgVShEw0TIIwtP9"
+        path: "/home/demouser/.ssh/authorized_keys"

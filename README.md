@@ -159,7 +159,14 @@ JSON:
 
 ```
 
-
+"parameters": {
+  "adminUserName": {
+    "value": "demouser"
+  },
+  "adminPassword": {
+    "value": "Arpanet1"
+  },
+}
 
 ```
 
